@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+.navbar-scroll .nav-link,
+.navbar-scroll .navbar-toggler-icon,
+.navbar-scroll .navbar-brand {
+  color: #fff;
+}
+
+.navcc {
+  display: flex;
+  justify-content: center;
+}
