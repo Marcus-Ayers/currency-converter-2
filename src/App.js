@@ -8,72 +8,52 @@ import 'react-dropdown/style.css';
 
 function App() {
   const [info, setInfo] = useState([]); 
-
   const [input, setInput] = useState(0); 
-
   const [from, setFrom] = useState("usd"); 
-
-  const [to, setTo] = useState("inr"); 
-
+  const [to, setTo] = useState("eur"); 
   const [options, setOptions] = useState([]); 
-
   const [output, setOutput] = useState(0); 
 
    // Calling the api whenever the dependency changes 
-
    useEffect(() => { 
-
     Axios.get( 
-
 `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`) 
-
    .then((res) => { 
-
       setInfo(res.data[from]); 
-
     }) 
-
   }, [from]); 
-
-  
-
   // Calling the convert function whenever 
-
   // a user switches the currency 
-
   useEffect(() => { 
-
     setOptions(Object.keys(info)); 
-
     convert(); 
-
   }, [info]) 
-
+  //Changing the output when the currency changes
+  useEffect(() => {
+    var rate = info[to]
+    setOutput(input * rate)
+  })
   // Function to convert the currency 
-
   function convert() { 
-
     var rate = info[to]; 
-
     setOutput(input * rate); 
-
   } 
-
-  
 
   // Function to switch between two currency 
-
   function flip() { 
-
     var temp = from; 
-
     setFrom(to); 
-
     setTo(temp); 
-
   } 
-
-
+  function handleChange(e) {
+     var x = e.target.value
+    setInput(x)
+    console.log("x = " + x + " input = " + input)
+    var rate = info[to]
+    setOutput(x * rate)
+    
+  }
+  
   return (
     // NAVBAR
     <div className="App">
@@ -97,14 +77,15 @@ function App() {
   <h3>Amount</h3> 
   <input type="text" 
      placeholder="Enter the amount" 
-     onChange={(e) => setInput(e.target.value)} /> 
+     onChange={(e) => {setInput(e.target.value); handleChange(e)}}
+      /> 
 </div> 
     </div>
     <div className="col">
     <div className="middle"> 
   <h3>From</h3> 
   <Dropdown options={options}  
-            onChange={(e) => { setFrom(e.value) }} 
+            onChange={(e) => { setFrom(e.value);  }} 
   value={from} placeholder="From" /> 
 </div> 
     </div>
@@ -119,7 +100,7 @@ function App() {
 <div className="right"> 
   <h3>To</h3> 
   <Dropdown options={options}  
-            onChange={(e) => {setTo(e.value)}}  
+            onChange={(e) => {setTo(e.value); }}  
   value={to} placeholder="To" /> 
   </div>
     </div>
@@ -134,36 +115,6 @@ function App() {
     </div>
   </div>
 </div>
-{/* END */}
-{/* <div className="container"> 
-<div className="left"> 
-  <h3>Amount</h3> 
-  <input type="text" 
-     placeholder="Enter the amount" 
-     onChange={(e) => setInput(e.target.value)} /> 
-</div> 
-<div className="middle"> 
-  <h3>From</h3> 
-  <Dropdown options={options}  
-            onChange={(e) => { setFrom(e.value) }} 
-  value={from} placeholder="From" /> 
-</div> 
-<div className="switch"> 
-  <HiSwitchHorizontal size="30px" 
-                onClick={() => { flip()}}/> 
-</div> 
-<div className="right"> 
-  <h3>To</h3> 
-  <Dropdown options={options}  
-            onChange={(e) => {setTo(e.value)}}  
-  value={to} placeholder="To" /> 
-  </div> 
-</div> 
-  <div className="result"> 
-    <button onClick={()=>{convert()}}>Convert</button> 
-    <h2>Converted Amount:</h2> 
-    <p>{input+" "+from+" = "+output.toFixed(2) + " " + to}</p> 
-  </div>  */}
     </div>
   );
 }
